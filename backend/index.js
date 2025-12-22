@@ -6,6 +6,8 @@ import { connectDB } from './config/connectDB.js ';
 dotenv.config();
 
 import userRoutes from "./routes/user.routes.js"
+import sellerRoutes from "./routes/seller.routes.js"
+
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.get('/', (req,res)=>{
     res.send("hello World")
 })
 app.use("/api/user", userRoutes);
+app.use("/api/seller", sellerRoutes);
 
 
 const PORT = process.env.PORT || 4000;
