@@ -55,7 +55,7 @@ const AppContextProvider=({children})=>{
         // setProducts(dummyProducts)
         try {
             const {data} = await axios.get("/api/product/list");
-            console.log(data.products);
+            
             if(data.success){
                 setProducts(data.products);
                 
