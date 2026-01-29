@@ -13,7 +13,7 @@ import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 import AddAddess from './pages/AddAddess';
 import SellerLogin from './components/seller/SellerLogin';
-import SellerLayout from './pages/seller/sellerLayout';
+import SellerLayout from './pages/seller/SellerLayout';
 import AddProduct from './pages/seller/AddProduct';
 import ProductList from './pages/seller/ProductList';
 import Orders from './pages/seller/Orders';
