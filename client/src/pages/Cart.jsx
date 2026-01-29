@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { AppContext } from '../context/AppContext'
 import { dummyAddress } from '../assets/assets';
+import toast from 'react-hot-toast';
 
 const Cart = () => {
   const {
@@ -12,6 +13,9 @@ const Cart = () => {
     removeFromCart,
     updateCartItem,
     totalCartAmount,  
+    axios,
+    user,
+    setCartItems
   } = useContext(AppContext);
 
   // state to store products available in  cart 
@@ -22,7 +26,7 @@ const Cart = () => {
   const [showAddress, setShowAddress] = React.useState(false);
   
   // state for selected Address
-  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0])
+  const [selectedAddress, setSelectedAddress] = useState(null)
   // state for payment options
   const [paymentOption, setPaymentOption] =useState("COD");
 
@@ -38,14 +42,60 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
+  const getAddress=async()=>{
+    try {
+        const {data} = await axios.get("/api/address/get");
+        if(data.success){
+            setAddress(data.addresses);
+            if(data.addresses.length >0){
+                setSelectedAddress(data.addresses[0]);
+            }
+        }else{
+            toast.error(data.message);
+        }
+    } catch (error) {
+        toast.error(data.error);
+    }
+  }
+
+  useEffect(()=>{
+    if(user){
+        getAddress();
+    }
+    console.log(user);
+  },[user]);
+
   useEffect(() => {
   if (products.length > 0 && cartItems) {
     getCart();
   }
   }, [products, cartItems]);
 
-const placeOrder =()=>{
-    navigate("/my-orders")
+const placeOrder =async()=>{
+    try {
+        if(!selectedAddress){
+            return toast.error("Please Select an address");
+        }
+        // place order with COD
+        if(paymentOption ==="COD"){
+            const {data} =await axios.post("/api/order/cod",{
+                items:cartArray.map((item)=>({
+                    product:item._id,
+                    quantity:item.quantity
+                })),
+                address:selectedAddress._id
+            });
+            if(data.success){
+                toast.success(data.message);
+                setCartItems({})
+                navigate("/my-orders");
+            }else{
+                toast.error(data.message);
+            }
+        }
+    } catch (error) {
+        toast.error(error.message);
+    }
 }
 
   return products.length>0 && cartItems? (
@@ -72,7 +122,7 @@ const placeOrder =()=>{
                         }}
                         className="flex items-center md:gap-6 gap-3">
                             <div className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded overflow-hidden">
-                                <img className="max-w-full h-full object-cover" src={product.image[0]} alt={product.name} />
+                                <img className="max-w-full h-full object-cover" src={`http://localhost:8080/images/${product.image[0]}`} alt={product.name} />
                             </div>
                             <div>
                                 <p className="hidden md:block font-semibold">{product.name}</p>

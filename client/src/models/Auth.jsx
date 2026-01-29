@@ -1,5 +1,7 @@
 import { useContext, useState } from "react"
 import { AppContext } from "../context/AppContext"
+import { toast } from "react-toastify";
+
 const Auth = () => {
 
     const [state, setState] =useState("login")
@@ -9,13 +11,32 @@ const Auth = () => {
         email: '',
         password: ''
     })
-    const {setShowUserLogin, setUser} = useContext(AppContext)
+    const {setShowUserLogin, setUser, axios, navigate} = useContext(AppContext)
 
     const submitHandler = async (e) => {
     e.preventDefault();
-    const { name, email, password } = formData;
-    console.log("name", name, "email", email, "password", password);
-}
+
+    try {
+        const { name, email, password } = formData;
+
+        const { data } = await axios.post(`/api/user/${state}`, {
+            name,
+            email,
+            password,
+        });
+
+        if (data.success) {
+            toast.success(data.message);
+            setUser(data.user);
+            setShowUserLogin(false);
+            navigate("/");
+        } else {
+            toast.error(data.message);
+        }
+    } catch (error) {
+        toast.error(error.response?.data?.message || error.message);
+    }
+}; // ✅ THIS WAS MISSING
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -29,8 +50,8 @@ const Auth = () => {
             }}
             className="fixed top-0 bottom-0 left-0 right-0 z-40 flex items-center justify-center bg-black/50 text-gray-600">
                 <form 
-                onClick={(e)=>e.stopPropagation()}
-                onSubmit={submitHandler} 
+                onSubmit={submitHandler}
+                onClick={(e)=>e.stopPropagation()} 
                 className="sm:w-[350px] w-full text-center border border-gray-300/60 rounded-2xl px-8 bg-white">
                 <h1 className="text-orange-500 text-3xl mt-10 font-medium">{state === "login" ? "Login" : "Sign up"}</h1>
                 <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
@@ -52,18 +73,27 @@ const Auth = () => {
                     <button className="text-sm" type="reset">Forget password?</button>
                 </div>
                 <button 
-                onClick={()=>{
-                    setUser(true)
-                    setShowUserLogin(false)
-                }}
+                
                 type="submit" 
                 className="mt-2 w-full h-11 rounded-full text-white bg-orange-500 hover:bg-orange-600 transition-opacity">
                     {state === "login" ? "Login" : "Sign up"}
                 </button>
-                <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? "Don't have an account?" : "Already have an account?"} <a href="#" className="text-orange-500 hover:underline">click here</a></p>
+                <p className="text-gray-500 text-sm mt-3 mb-11">
+                    {state === "login" ? "Don't have an account?" : "Already have an account?"}
+                    <button
+                    type="button"
+                        onClick={() => setState(prev => prev === "login" ? "register" : "login")}
+                        className="text-orange-500 hover:underline ml-1"
+                        >
+                    click here
+                    </button>
+                </p>
+
             </form>
             </div>
     )
 }
 
 export default Auth;
+
+

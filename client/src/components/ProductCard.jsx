@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
       }}
     className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full">
             <div className="group cursor-pointer flex items-center justify-center px-2">
-                <img className="group-hover:scale-105 transition max-w-26 md:max-w-36" src={product.image[0]} alt={product.name} />
+                <img className="group-hover:scale-105 transition max-w-26 md:max-w-36" src={`http://localhost:8080/images/${product.image[0]}`} alt={product.name} />
             </div>
             <div className="text-gray-500/60 text-sm">
                 <p>{product.category}</p>
@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
                     </p>
                     <div className="text-indigo-500"
                         onClick={(e)=>e.stopPropagation()}>
-                        {!cartItems[product._id] ? (
+                        {!cartItems?.[product._id] ? (
                             <button className="flex items-center justify-center gap-1 bg-indigo-100 border border-indigo-300 
                             w-16 md:w-20 h-9 rounded text-indigo-600 font-medium" 
                             onClick={() => addToCart(product._id)} >

@@ -21,18 +21,38 @@ export const addAddress = async ( req,res)=>{
     }
 }
 
-// get address :/api/address/get
-export const getAddress = async(req, res)=>{
-    try {
-        const userId = req.user;
-        const addresses = (await Address.find({userId})).sort({createdAt:-1});
+// // get address :/api/address/get
+// export const getAddress = async(req, res)=>{
+//     try {
+//         const userId = req.user;
+//         const addresses = (await Address.find({userId})).sort({createdAt:-1});
 
-        res.status(200).json({
-            success:true,
-            addresses,
-        })
-    } catch (error) {
-        console.log("Error Placing Order :",error)
-        res.status(500).json({message:"Internal Server Error"})
-    }
-}
+//         res.status(200).json({
+//             success:true,
+//             addresses,
+//         })
+//     } catch (error) {
+//         console.log("Error Placing Order :",error)
+//         res.status(500).json({message:"Internal Server Error"})
+//     }
+// }
+
+// get address : /api/address/get
+export const getAddress = async (req, res) => {
+  try {
+    const addresses = await Address
+      .find({ user: req.user._id })
+      .sort({ createdAt: -1 }); // ✅ mongoose sort
+
+    res.status(200).json({
+      success: true,
+      addresses,
+    });
+  } catch (error) {
+    console.log("Error Getting Address :", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

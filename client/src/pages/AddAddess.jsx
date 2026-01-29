@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 
 const AddAddress = () => {
-  const [address, setAddress] = React.useState({
+  const [address, setAddress] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -37,7 +37,7 @@ const AddAddress = () => {
   };
   useEffect(() => {
     if (!user) {
-    //   navigate("/cart");
+      navigate("/cart");
     }
   }, []);
   return (

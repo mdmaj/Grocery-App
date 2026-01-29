@@ -9,9 +9,9 @@ import{
     } from "../controllers/product.controller.js";
 const router = express.Router();
 
-router.post("/add-product", upload.array("images"),authSeller, addProduct)
+router.post("/add-product",authSeller, upload.array("image"), addProduct)
 router.get("/list", getProduct)
-router.get("/id", getProductById)
+router.get("/:id", getProductById)
 router.post("/stock", authSeller, changeStock)
 
 export default router;

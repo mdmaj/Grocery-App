@@ -23,7 +23,7 @@ export const placeOrderCOD = async(req,res)=>{
             items,
             address,
             amount,
-            paymentMethod: "COD",
+            paymentType: "COD",
             isPaid: false,
         });
         res.status(201).json({
@@ -42,7 +42,7 @@ export const getUserOrders = async(req,res)=>{
         const userId = req.user;
         const orders = await Order.find({
             userId,
-            $or:[{paymentMethod:"COD"}, {isPaid:true}],
+            $or:[{paymentType:"COD"}, {isPaid:true}],
         }).populate("items.product address").sort({createdAt : -1});
         res.status(200).json({
             success:true,
@@ -58,7 +58,7 @@ export const getUserOrders = async(req,res)=>{
 export const getAllOrders = async(req,res)=>{
     try {
         const orders=await Order.find({
-            $or :[{paymentMethod: "COD" }, {isPaid: true}],
+            $or :[{paymentType: "COD" }, {isPaid: true}],
         })
         .populate("items.product address")
         .sort({createdAt: -1});

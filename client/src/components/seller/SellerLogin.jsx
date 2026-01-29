@@ -15,24 +15,23 @@ const SellerLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const { data } = await axios.post("/api/seller/login", {
-    //     email,
-    //     password,
-    //   });
+    try {
+      const { data } = await axios.post("/api/seller/login", {
+        email,
+        password,
+      });
 
-    //   if (data.success) {
+      if (data.success) {
         
-    //     navigate("/seller");
-    //     setIsSeller(true);
-    //   } else {
-    //     toast.error(data.message || "Login failed");
-    //   }
-    // } catch (error) {
-    //   toast.error(error?.response?.data?.message || error.message);
-    // }
-
-    setIsSeller(true);
+        navigate("/seller");
+        setIsSeller(true);
+      } else {
+        toast.error(data.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  
   };
 
   // if (isSeller) return null;

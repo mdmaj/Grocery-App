@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="px-6 py-16 md:px-16 lg:px-24 xl:px-32">
             <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
                 <div>
-                    <h2 className="font-semibold text-2xl md:text-3xl text-orange-700">Grocery App</h2>
+                    <h2 className="font-semibold text-2xl md:text-3xl text-orange-700">Quick Mart</h2>
                     <p className="text-sm md:text-base mt-2">This grocery app transforms everyday shopping into a smart, seamless experience—where your pantry talks to your phone.</p>
                 </div>
                 <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
