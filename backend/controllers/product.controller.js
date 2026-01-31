@@ -1,7 +1,5 @@
 import Product from '../models/product.model.js';
-
-
-
+import { v2 as cloudinary } from 'cloudinary';
 
 // add Product :/api/product/add-product
 export const addProduct = async (req,res)=>{
@@ -14,21 +12,41 @@ export const addProduct = async (req,res)=>{
             category
         } = req.body;
 
-        const image= req.files?.map((file)=> file.filename);
         if(
             !name || 
             !price || 
             !offerPrice || 
             !description || 
             !category || 
-            !image || 
-            image.length ===0){
+            !req.files || 
+            req.files.length ===0){
             return res.status(400).json({
                 success: false,
                 message :"All Fields including images are required",
             });
         }
-        
+
+        // Upload images to Cloudinary
+        const uploadPromises = req.files.map((file) => {
+            return new Promise((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    {
+                        folder: 'grocery-products', // Optional: organize images in a folder
+                        resource_type: 'image'
+                    },
+                    (error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result.secure_url); // Store the Cloudinary URL
+                        }
+                    }
+                );
+                uploadStream.end(file.buffer);
+            });
+        });
+
+        const imageUrls = await Promise.all(uploadPromises);
 
         await Product.create({
             name,
@@ -36,7 +54,7 @@ export const addProduct = async (req,res)=>{
             price,
             offerPrice,
             category,
-            image,
+            image: imageUrls, // Store Cloudinary URLs instead of filenames
         })
 
         res.status(201).json({message: "Product added Successfully", success: true});

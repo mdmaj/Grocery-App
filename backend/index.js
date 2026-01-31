@@ -30,7 +30,6 @@ app.use(cookieParser());
 
 // API Endpoints
 
-app.use("/images", express.static("uploads"));
 app.use("/api/user", userRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/product", productRoutes);
